@@ -1,5 +1,5 @@
 ;
-; network-wfp-redirect-filter.inf
+; netwfprdr.inf
 ;
 
 [Version]
@@ -8,7 +8,7 @@ Class=System
 ClassGuid={4d36e97d-e325-11ce-bfc1-08002be10318}
 Provider=%ManufacturerName%
 DriverVer=
-CatalogFile=network-wfp-redirect-filter.cat
+CatalogFile=netwfprdr.cat
 
 [DestinationDirs]
 DefaultDestDir = 12

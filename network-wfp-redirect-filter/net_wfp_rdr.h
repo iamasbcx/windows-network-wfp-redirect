@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2020 Alexandr Shevchenko. All rights reserved.
+ */
+
 #pragma once
 
 
@@ -21,8 +25,8 @@ extern "C"
 #include <ntstrsafe.h>                /// Inc
 #include <stdlib.h>                   /// SDK\Inc\CRT
 
+#pragma warning(pop)
+
+}
 
 #include "debug.h"
-
-#pragma warning(pop)
-}

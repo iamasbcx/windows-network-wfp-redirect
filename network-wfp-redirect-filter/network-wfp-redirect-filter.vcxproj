@@ -123,6 +123,7 @@
     <DebuggerFlavor>DbgengKernelDebugger</DebuggerFlavor>
     <OutDir>$(SolutionDir)\out\$(Platform)\$(ConfigurationName)\</OutDir>
     <IntDir>$(SolutionDir)\out\$(Platform)\$(ConfigurationName)\</IntDir>
+    <TargetName>netwfprdr</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <DebuggerFlavor>DbgengKernelDebugger</DebuggerFlavor>
@@ -157,16 +158,19 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <Inf Include="network-wfp-redirect-filter.inf" />
+    <Inf Include="netwfprdr.inf" />
   </ItemGroup>
   <ItemGroup>
     <FilesToPackage Include="$(TargetPath)" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="debug.cpp" />
+    <ClCompile Include="log.cpp" />
     <ClCompile Include="net_wfp_rdr.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="debug.h" />
+    <ClInclude Include="log.h" />
     <ClInclude Include="net_wfp_rdr.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
