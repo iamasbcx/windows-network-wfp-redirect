@@ -29,8 +29,12 @@ void dbg_print(
 
 #define DBGPRINT(level, fmt, ...)		dbg_print(level, __FUNCTION__, fmt, __VA_ARGS__)
 
+#define DBG_ASSERT( _X_ ) ASSERT( _X_ )
+#define DBG_NT_ASSERT( _X_ ) NT_ASSERT( _X_ )
+
 #else
 
 DBGPRINT((_X_))
-
+#define DBG_ASSERT( _X_ )
+#define DBG_NT_ASSERT( _X_ )
 #endif

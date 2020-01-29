@@ -156,7 +156,21 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="core_dump.cpp" />
+    <ClCompile Include="driver.cpp" />
+    <ClCompile Include="input_cmd.cpp" />
+    <ClCompile Include="log.cpp" />
     <ClCompile Include="network-proxy-server.cpp" />
+    <ClCompile Include="service.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="core_dump.h" />
+    <ClInclude Include="debug.h" />
+    <ClInclude Include="driver.h" />
+    <ClInclude Include="input_cmd.h" />
+    <ClInclude Include="log.h" />
+    <ClInclude Include="service.h" />
+    <ClInclude Include="utilities.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
