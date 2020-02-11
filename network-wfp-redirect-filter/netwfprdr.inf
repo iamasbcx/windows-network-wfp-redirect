@@ -27,6 +27,6 @@ DefaultDestDir = 12
 
 
 [Strings]
-ManufacturerName="<Your manufacturer name>" ;TODO: Replace with your manufacturer name
+ManufacturerName="alexshev" ;TODO: Replace with your manufacturer name
 ClassName=""
 DiskName="network-wfp-redirect-filter Source Disk"

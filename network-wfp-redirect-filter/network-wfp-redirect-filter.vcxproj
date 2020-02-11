@@ -177,6 +177,7 @@
     <ClCompile Include="debug.cpp" />
     <ClCompile Include="log.cpp" />
     <ClCompile Include="ex_allocate_pool.cpp" />
+    <ClCompile Include="net_wfp_callout.cpp" />
     <ClCompile Include="net_wfp_rdr.cpp" />
     <ClCompile Include="new.cpp" />
     <ClCompile Include="string.cpp" />
@@ -186,6 +187,7 @@
     <ClInclude Include="driver.h" />
     <ClInclude Include="log.h" />
     <ClInclude Include="ex_allocate_pool.h" />
+    <ClInclude Include="net_wfp_callout.h" />
     <ClInclude Include="net_wfp_rdr.h" />
     <ClInclude Include="new.h" />
     <ClInclude Include="string.h" />
