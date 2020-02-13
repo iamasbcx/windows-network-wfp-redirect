@@ -1,3 +1,15 @@
+* Windows-Network-Wfp-Redirect
+
 Data Leak Detection. Antivirus.  Interception of network traffic using the proxy server method.
 
-1.Load driver use [[https://www.osronline.com/article.cfm%5Earticle=157.htm][OSR Driver Loader]]
+1. Load driver use [[https://www.osronline.com/article.cfm%5Earticle=157.htm][OSR Driver Loader]]
+
+
+* Design
+
+** Directory structure
+
+| Directory | Description|
+|
+| network-wfp-monitor-app | windows app|
+| network-wfp-monitor-filters | network wfp driver |
