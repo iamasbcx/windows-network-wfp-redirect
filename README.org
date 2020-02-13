@@ -11,5 +11,5 @@ Data Leak Detection. Antivirus.  Interception of network traffic using the proxy
 
 | Directory | Description|
 |
-| network-wfp-monitor-app | windows app|
-| network-wfp-monitor-filters | network wfp driver |
+| network-proxy-server | windows app|
+| network-wfp-redirect-filter | network wfp driver |
