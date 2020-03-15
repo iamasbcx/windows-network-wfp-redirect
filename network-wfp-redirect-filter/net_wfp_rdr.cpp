@@ -88,7 +88,7 @@ NTSTATUS net_create_interface(
 	do
 	{
 
-		RtlInitUnicodeString(&nt_device_name, NT_DEVICE_NAME);
+		RtlInitUnicodeString(&nt_device_name, NETWFPPROXY_NT_DEVICE_NAME);
 
 		status = IoCreateDevice(DriverObject,
 			0,
@@ -103,7 +103,7 @@ NTSTATUS net_create_interface(
 			break;
 		}
 
-		RtlInitUnicodeString(&win32_device_name, DOS_DEVICE_NAME);
+		RtlInitUnicodeString(&win32_device_name, NETWFPPROXY_DOS_DEVICE_NAME);
 
 		status = IoCreateSymbolicLink(&win32_device_name, &nt_device_name);
 		DBG_ASSERT(NT_SUCCESS(status));
@@ -145,12 +145,12 @@ NTSTATUS net_delete_interface()
 		return STATUS_UNSUCCESSFUL;
 	}
 
-	RtlInitUnicodeString(&win32_device_name, DOS_DEVICE_NAME);
+	RtlInitUnicodeString(&win32_device_name, NETWFPPROXY_DOS_DEVICE_NAME);
 
 	status = IoDeleteSymbolicLink(&win32_device_name);
 	DBG_ASSERT(NT_SUCCESS(status));
 
-	DBGPRINT(NWRFLTR_INFO_LEVEL, "Delete link, win32_device_name:%ws, status:0x%x\r\n", win32_device_name, status);
+	DBGPRINT(NWRFLTR_INFO_LEVEL, "Delete link, win32_device_name:%Z, status:0x%x\r\n", win32_device_name, status);
 
 	IoDeleteDevice(g_device_object);
 	g_device_object = NULL;
@@ -271,12 +271,80 @@ NTSTATUS
 net_device_dispatch(
     _In_    PDEVICE_OBJECT DeviceObject,
     _In_    PIRP PtrIrp
-)
+	)
 {
     NTSTATUS    status = STATUS_SUCCESS;
+	PNET_IO_REQUEST    request;
+	ULONG              output_buffer_length;
+	ULONG              input_buffer_length;
+	ULONG              code;
+	PIO_STACK_LOCATION		pIrpStack;
+
 
     UNREFERENCED_PARAMETER(DeviceObject);
     UNREFERENCED_PARAMETER(PtrIrp);
+
+
+	request = (PNET_IO_REQUEST)PtrIrp->AssociatedIrp.SystemBuffer;
+
+	pIrpStack = IoGetCurrentIrpStackLocation(PtrIrp);
+
+	code = pIrpStack->Parameters.DeviceIoControl.IoControlCode;
+	output_buffer_length = pIrpStack->Parameters.DeviceIoControl.InputBufferLength;
+	input_buffer_length = pIrpStack->Parameters.DeviceIoControl.OutputBufferLength;
+
+
+
+	PtrIrp->IoStatus.Information = 0x0;
+
+
+	switch (pIrpStack->MajorFunction)
+	{
+	case IRP_MJ_CREATE:
+		DBGPRINT(NWRFLTR_INFO_LEVEL, "IRP_MJ_CREATE, pid:%d, DeviceObject:0x%p, FileObject:0x%p\n",
+					PsGetCurrentProcessId(), DeviceObject, pIrpStack->FileObject);
+		break;
+	case IRP_MJ_CLEANUP:
+		DBGPRINT(NWRFLTR_INFO_LEVEL, "IRP_MJ_CLEANUP, pid:%d, DeviceObject:0x%p, FileObject:0x%p\n",
+					PsGetCurrentProcessId(), DeviceObject, pIrpStack->FileObject);
+		break;
+	case IRP_MJ_CLOSE:
+		DBGPRINT(NWRFLTR_INFO_LEVEL, "IRP_MJ_CLEANUP, pid:%d, DeviceObject:0x%p, FileObject:0x%p\n",
+					PsGetCurrentProcessId(), DeviceObject, pIrpStack->FileObject);
+		break;
+	case IRP_MJ_SHUTDOWN:
+		DBGPRINT(NWRFLTR_INFO_LEVEL, "IRP_MJ_SHUTDOWN, pid:%d, DeviceObject:0x%p, FileObject:0x%p\n",
+					PsGetCurrentProcessId(), DeviceObject, pIrpStack->FileObject);
+		break;
+	case IRP_MJ_INTERNAL_DEVICE_CONTROL:
+		DBGPRINT(NWRFLTR_INFO_LEVEL, "IRP_MJ_INTERNAL_DEVICE_CONTROL, pid:%d, DeviceObject:0x%p, FileObject:0x%p\n",
+					PsGetCurrentProcessId(), DeviceObject, pIrpStack->FileObject);
+		break;
+	case IRP_MJ_DEVICE_CONTROL:
+		switch (code) {
+		case IOCTL_NET_FILTER_TEST:
+			DBGPRINT(NWRFLTR_INFO_LEVEL, "IOCTL_NET_FILTER_TEST\n");
+			break;
+		default:
+			DBGPRINT(NWRFLTR_INFO_LEVEL, "IRP_MJ_DEVICE_CONTROL, Error, pid:%d, DeviceObject:0x%p, FileObject:0x%p\n",
+				PsGetCurrentProcessId(), DeviceObject, pIrpStack->FileObject);
+			status = STATUS_INVALID_DEVICE_REQUEST;
+			break;
+		}
+		break;
+	}
+
+
+	if (status != STATUS_PENDING) {
+
+		if (NT_SUCCESS(status) && 0x0 != output_buffer_length)
+			PtrIrp->IoStatus.Information = sizeof(*request);
+		else
+			PtrIrp->IoStatus.Information = 0x0;
+
+		PtrIrp->IoStatus.Status = status;
+		IoCompleteRequest(PtrIrp, IO_NO_INCREMENT);
+	}
 
     return status;
 }
@@ -323,22 +391,21 @@ NTSTATUS net_FwpmBfeStateSubscribeChanges()
 
 
 
-
-
 _IRQL_requires_(PASSIVE_LEVEL)
 _IRQL_requires_same_
 _Function_class_(DRIVER_INITIALIZE)
 NTSTATUS DriverEntry(_In_ PDRIVER_OBJECT pDriverObject,_In_ PUNICODE_STRING pRegistryPath)
 {
-    DBGPRINT(NWRFLTR_INFO_LEVEL, "Driver loaded\n");
+    DBGPRINT(NWRFLTR_INFO_LEVEL, "Driver loaded: time:%s, RegistryPath:%ws\n", __TIME__, pRegistryPath->Buffer);
 
     WPP_INIT_TRACING(pDriverObject, pRegistryPath);
 
 	DBG_NT_ASSERT(pDriverObject);
 	DBG_NT_ASSERT(pRegistryPath);
 
-
     NTSTATUS    status = STATUS_SUCCESS;
+
+	
 
 	status = net_create_interface(pDriverObject);
 	DBG_ASSERT(NT_SUCCESS(status));
@@ -346,6 +413,12 @@ NTSTATUS DriverEntry(_In_ PDRIVER_OBJECT pDriverObject,_In_ PUNICODE_STRING pReg
 		goto __exit;
 	}
 
+
+	IoRegisterShutdownNotification(g_device_object);
+	DBG_ASSERT(NT_SUCCESS(status));
+	if (!NT_SUCCESS(status)) {
+		goto __exit;
+	}
 
 	status = net_wfp_start_filter(pDriverObject);
 	DBG_ASSERT(NT_SUCCESS(status));

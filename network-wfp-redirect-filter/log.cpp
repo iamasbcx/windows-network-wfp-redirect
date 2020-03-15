@@ -12,3 +12,35 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+
+
+#include <wdm.h>
+#include <ntddk.h>
+
+#include <stdarg.h>
+#include <stdio.h>
+#include <Ntstrsafe.h>
+
+
+#include "log.h"
+
+
+
+
+NTSTATUS
+log_init(void)
+{
+	NTSTATUS status = STATUS_SUCCESS;
+
+	
+
+	return status;
+}
+
+
+
+void
+log_free(void)
+{
+	
+}

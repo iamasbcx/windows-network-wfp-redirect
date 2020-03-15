@@ -121,8 +121,8 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <DebuggerFlavor>DbgengKernelDebugger</DebuggerFlavor>
-    <OutDir>$(SolutionDir)\out\$(Platform)\$(ConfigurationName)\</OutDir>
-    <IntDir>$(SolutionDir)\out\$(Platform)\$(ConfigurationName)\</IntDir>
+    <OutDir>$(SolutionDir)\out\$(Platform)\$(ConfigurationName)\netwfprdr\</OutDir>
+    <IntDir>$(SolutionDir)\out\$(Platform)\$(ConfigurationName)\netwfprdr\temp\</IntDir>
     <TargetName>netwfprdr</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -181,16 +181,19 @@
     <ClCompile Include="net_wfp_rdr.cpp" />
     <ClCompile Include="new.cpp" />
     <ClCompile Include="string.cpp" />
+    <ClCompile Include="time.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="debug.h" />
     <ClInclude Include="driver.h" />
+    <ClInclude Include="kernel_to_user.h" />
     <ClInclude Include="log.h" />
     <ClInclude Include="ex_allocate_pool.h" />
     <ClInclude Include="net_wfp_callout.h" />
-    <ClInclude Include="net_wfp_rdr.h" />
+    <ClInclude Include="net_wfp_mon.h" />
     <ClInclude Include="new.h" />
     <ClInclude Include="string.h" />
+    <ClInclude Include="time.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

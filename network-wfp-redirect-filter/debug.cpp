@@ -16,26 +16,60 @@
 
 #include <wdm.h>
 
+#include <ntddk.h>
+
+
+#include <stdarg.h>
+#include <stdio.h>
+#include <Ntstrsafe.h>
+
+
 #include "debug.h"
 
 
+#define LOG_MSG_SIZE 1024
 
+#define TWO_SECONDS (2*1000*1000*10)
+#define ALMOST_TWO_SECONDS (TWO_SECONDS - 1)
 
 
 void dbg_print(
-	__in    ULONG Level,
-	__in    const char* FuncName,
+	__in    ULONG level,
+	__in    const char* func_name,
 	__in    const char* fmt, ...
 	)
 {
-	UNREFERENCED_PARAMETER(Level);
-	UNREFERENCED_PARAMETER(FuncName);
+	UNREFERENCED_PARAMETER(level);
+	UNREFERENCED_PARAMETER(func_name);
 	UNREFERENCED_PARAMETER(fmt);
 
+	NTSTATUS status = STATUS_SUCCESS;
+	char msg[LOG_MSG_SIZE];
+	LARGE_INTEGER time;
+	TIME_FIELDS time_fields;
+
 	va_list args;
+
 	va_start(args, fmt);
 
-	DbgPrint(fmt, args);
+
+	status = RtlStringCbVPrintfA(msg, LOG_MSG_SIZE, fmt, args);
+	if (!NT_SUCCESS(status)) {
+		msg[sizeof(msg) - 1] = '\0';
+	}
+	
+
+	KeQuerySystemTime(&time);
+	ExSystemTimeToLocalTime(&time, &time);
+	//KernelTimeToSystemTime(&time2, &time3);
+
+
+	time.QuadPart = time.QuadPart + ALMOST_TWO_SECONDS;
+
+	(VOID)RtlTimeToTimeFields(&time, &time_fields);
+
+
+	DbgPrint(msg);
 
 	va_end(args);
 

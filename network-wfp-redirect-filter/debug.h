@@ -32,8 +32,8 @@
 
 
 void dbg_print(
-	__in    ULONG Level,
-	__in    const char* FuncName,
+	__in    ULONG level,
+	__in    const char* func_name,
 	__in    const char* fmt, ...
 	);
 

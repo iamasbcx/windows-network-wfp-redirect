@@ -58,6 +58,8 @@ net_wfp_stub_classify(
 	DBGPRINT(NWRFLTR_INFO_LEVEL, "Connect, %d.%d.%d.%d:%u --> %d.%d.%d.%d:%u\n",
 		FORMAT_IPV4_ADDR(local_address), local_port, FORMAT_IPV4_ADDR(remote_address), remote_port);
 
+	//DbgPrint("Connect, %d.%d.%d.%d:%u --> %d.%d.%d.%d:%u\n",
+		//FORMAT_IPV4_ADDR(local_address), local_port, FORMAT_IPV4_ADDR(remote_address), remote_port);
 
 	classifyOut->actionType = FWP_ACTION_PERMIT;
 	return;
